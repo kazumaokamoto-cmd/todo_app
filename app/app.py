@@ -25,13 +25,27 @@ def index():
 #         "is_done": False
 #     }
 # ]
+    # print('todosの要素数は')
+    # print(len(todos))
+    # del_id_list = []    
+    # for i in range(len(todos) - 1):
+    #     print(f'{i}番目の判定を開始')
+    #     if todos[i]['is_done'] == True:
+    #         print(f'{i}番目はis_done')
+    #         del_id_list.append(i)
 
-    for i in range(len(todos)):
-        if todos[i]['is_done'] == True:
-            del todos[i]
-        else:
-            pass
+    #     else:
+    #         print(f'{i}番目はis_doneでない')
+    # print(todos)
+    # print(del_id_list) 
     
+    # for i in range(len(del_id_list) - 1): 
+    #     del todos[i]
+
+    # print(todos)
+
+
+    todos = [i for i in todos if not i.get('is_done')]
     return render_template('index.html', todos=todos)
     
 
@@ -48,7 +62,7 @@ def add():
 
     return redirect('/')
 
-@app.route('/complete/<int:index>', methods=['POST'])
-def complete(id):
-    func.complete_todo(id)
+@app.route('/complete/<int:todo_id>', methods=['POST'])
+def complete(todo_id):
+    func.complete_todo(todo_id)
     return redirect('/')

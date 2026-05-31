@@ -13,9 +13,10 @@ def save_csv(add_todo):
     if db_path.is_file():
         
         print('csvファイルが見つかりました')
+        #csvファイルがあってデータがないなら新しいidをつくる(id=1)
         df = pd.read_csv(db_path)
         if len(df) == 0:
-            new_id = 1
+            new_id = 0
         else:
             new_id = df['id'].max() + 1
         
@@ -24,6 +25,8 @@ def save_csv(add_todo):
         df.to_csv(db_path, index=False)
     else:
         print('csvファイルが見つかりません。csvを作成します')
+        
+        add_todo['id'] = 0
         df = pd.DataFrame([add_todo])
         df.to_csv(db_path, index=False)
 
@@ -59,9 +62,9 @@ todoが完了ときに呼び出される
 #     # その辞書をリストにしてインデックスがis_doneになっているインデックスが何なのかを列として指定してる
 #     df.iloc[id, list(df.to_dict(orient='records')[0]).index('is_done')] = True
 
-def complete_todo(id):
+def complete_todo(todo_id):
     
     db_path = Path('app/db/todo.csv')
     df = pd.read_csv(db_path)
-    df.loc[df['id'] == id, 'is_done'] = True
+    df.loc[df['id'] == todo_id, 'is_done'] = True
     df.to_csv(db_path, index=False)
