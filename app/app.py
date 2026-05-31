@@ -32,9 +32,11 @@ def index():
     todos = [t for t in todos if not t.get("is_done")]
     todos = func.calc_days_left(todos)
 
-    A = [t for t in todos if t.get("category") == "A"]
-    B = [t for t in todos if t.get("category") == "B"]
-    C = [t for t in todos if t.get("category") == "C"]
+    
+    A = [t for t in todos if t.get("category") == "個人用"]
+    B = [t for t in todos if t.get("category") == "課題"]
+    C = [t for t in todos if t.get("category") == "ロボコン"]
+
 
     
     return render_template("index.html", A=A, B=B, C=C)

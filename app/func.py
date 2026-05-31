@@ -30,8 +30,6 @@ def save_csv(add_todo):
         df = pd.DataFrame([add_todo])
         df.to_csv(db_path, index=False)
 
-# add_todo = {'title':'洗濯', 'category':'個人用'}
-# save_csv(add_todo)
 
 '''
 load_csvはcsvファイルが存在するか確かめてからcsvのデータを辞書のリストに変換する関数
@@ -52,15 +50,6 @@ def load_csv():
 complete_todoはtodo_doneをfalseからtrueにする関数
 todoが完了ときに呼び出される
 '''
-# def complete_todo(id):
-#     df = pd.read_csv(db_path)
-    
-    
-#     # is_doneが何番目か調べる。なぜならilocで番号指定しての書き換えをするから
-#     # カラムを変更しなければ絶対4なんだけどね
-#     # ごみみたいなコードができた。データフレームを辞書にして、その辞書のリストの0番目を取り出すと辞書だから
-#     # その辞書をリストにしてインデックスがis_doneになっているインデックスが何なのかを列として指定してる
-#     df.iloc[id, list(df.to_dict(orient='records')[0]).index('is_done')] = True
 
 def complete_todo(todo_id):
     

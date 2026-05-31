@@ -1,239 +1,139 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TODOアプリ</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap CSS -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+<title>Todo App</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body {
+  background: #fcf9f8;
+}
+.card {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+</style>
+
 </head>
 
-<body class="bg-light">
+<body class="p-6">
 
-    <div class="container-fluid py-4">
+<div class="max-w-6xl mx-auto">
 
-        <h1 class="text-center mb-4">TODOアプリ</h1>
+  <h1 class="text-3xl font-bold mb-6">
+    こんにちは、タスクを片付けましょう！ 🚀
+  </h1>
 
-        <div class="row g-3">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <!-- A列 -->
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header text-center fw-bold">
-                        個人用
-                    </div>
+    <!-- ================= 個人用 ================= -->
+    <div class="bg-pink-200 p-5 rounded-3xl card">
 
-                    <div class="card-body">
+      <h2 class="font-bold text-lg mb-4">個人用</h2>
 
-                        <!-- AにTODOを追加 -->
-                        <form action="/add/A" method="POST" class="mb-3">
-                            <input
-                                type="text"
-                                name="title"
-                                class="form-control mb-2"
-                                placeholder="タイトル"
-                                required
-                            >
+      <form action="/add/個人用" method="POST" class="mb-4 space-y-2">
+        <input name="title" placeholder="タイトル" class="w-full p-2 rounded bg-white">
+        <input type="date" name="deadline" class="w-full p-2 rounded bg-white">
+        <button class="bg-pink-500 text-white w-full p-2 rounded-full">
+          ＋追加
+        </button>
+      </form>
 
-                            <input
-                                type="date"
-                                name="deadline"
-                                class="form-control mb-2"
-                            >
+      {% for todo in A %}
+      <div class="bg-white p-4 rounded-xl mb-3 card flex justify-between items-center">
 
-                            <button type="submit" class="btn btn-primary w-100">
-                                ＋
-                            </button>
-                        </form>
-
-                        <!-- AのTODO一覧 -->
-                        {% if A %}
-                            {% for todo in A %}
-
-                                {% set color = "btn-outline-success" %}
-
-                                {% if todo.days_left is not none %}
-                                    {% if todo.days_left < 1 %}
-                                        {% set color = "btn-danger" %}
-                                    {% elif todo.days_left <= 2 %}
-                                        {% set color = "btn-warning" %}
-                                    {% endif %}
-                                {% endif %}
-
-                                <form action="/complete/{{ todo.id }}" method="POST" class="mb-2">
-                                    <button type="submit" class="btn {{ color }} w-100 text-start">
-
-                                        <strong>{{ todo.title }}</strong>
-
-                                        {% if todo.deadline %}
-                                            <br>
-                                            <small>
-                                                期限: {{ todo.deadline }}
-                                            </small>
-                                        {% endif %}
-
-                                    </button>
-                                </form>
-
-                            {% endfor %}
-                        {% else %}
-                            <p class="text-muted text-center mb-0">
-                                TODOなし
-                            </p>
-                        {% endif %}
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- B列 -->
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header text-center fw-bold">
-                        課題
-                    </div>
-
-                    <div class="card-body">
-
-                        <!-- BにTODOを追加 -->
-                        <form action="/add/B" method="POST" class="mb-3">
-                            <input
-                                type="text"
-                                name="title"
-                                class="form-control mb-2"
-                                placeholder="タイトル"
-                                required
-                            >
-
-                            <input
-                                type="date"
-                                name="deadline"
-                                class="form-control mb-2"
-                                class="form-control mb-2"
-                            >
-
-                            <button type="submit" class="btn btn-primary w-100">
-                                ＋
-                            </button>
-                        </form>
-
-                        <!-- BのTODO一覧 -->
-                        {% if B %}
-                            {% for todo in B %}
-                                
-                                {% set color = "btn-outline-success" %}
-
-                                    {% if todo.days_left is not none %}
-                                        {% if todo.days_left < 1 %}
-                                            {% set color = "btn-danger" %}
-                                        {% elif todo.days_left <= 2 %}
-                                            {% set color = "btn-warning" %}
-                                        {% endif %}
-                                    {% endif %}
-
-                                    <form action="/complete/{{ todo.id }}" method="POST" class="mb-2">
-                                        <button type="submit" class="btn {{ color }} w-100 text-start">
-
-                                            <strong>{{ todo.title }}</strong>
-
-                                            {% if todo.deadline %}
-                                                <br>
-                                                <small>
-                                                    期限: {{ todo.deadline }}
-                                                </small>
-                                            {% endif %}
-
-                                        </button>
-                                    </form>
-
-                            {% endfor %}
-                        {% else %}
-                            <p class="text-muted text-center mb-0">
-                                TODOなし
-                            </p>
-                        {% endif %}
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- C列 -->
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header text-center fw-bold">
-                        ロボコン
-                    </div>
-
-                    <div class="card-body">
-
-                        <!-- CにTODOを追加 -->
-                        <form action="/add/C" method="POST" class="mb-3">
-                            <input
-                                type="text"
-                                name="title"
-                                class="form-control mb-2"
-                                placeholder="タイトル"
-                                required
-                            >
-
-                            <input
-                                type="date"
-                                name="deadline"
-                                class="form-control mb-2"
-                            >
-
-                            <button type="submit" class="btn btn-primary w-100">
-                                ＋
-                            </button>
-                        </form>
-
-                        <!-- CのTODO一覧 -->
-                        {% if C %}
-                            {% for todo in C %}
-                                
-                                {% set color = "btn-outline-success" %}
-
-                                    {% if todo.days_left is not none %}
-                                        {% if todo.days_left < 1 %}
-                                            {% set color = "btn-danger" %}
-                                        {% elif todo.days_left <= 2 %}
-                                            {% set color = "btn-warning" %}
-                                        {% endif %}
-                                    {% endif %}
-
-                                    <form action="/complete/{{ todo.id }}" method="POST" class="mb-2">
-                                        <button type="submit" class="btn {{ color }} w-100 text-start">
-
-                                            <strong>{{ todo.title }}</strong>
-
-                                            {% if todo.deadline %}
-                                                <br>
-                                                <small>
-                                                    期限: {{ todo.deadline }}
-                                                </small>
-                                            {% endif %}
-
-                                        </button>
-                                    </form>
-
-                            {% endfor %}
-                        {% else %}
-                            <p class="text-muted text-center mb-0">
-                                TODOなし
-                            </p>
-                        {% endif %}
-
-                    </div>
-                </div>
-            </div>
-
+        <div>
+          <p class="font-semibold">{{ todo.title }}</p>
+          <p class="text-sm text-gray-500">
+            {{ todo.deadline if todo.deadline else "期限なし" }}
+          </p>
         </div>
 
+        <form action="/complete/{{ todo.id }}" method="POST">
+          <button class="text-blue-500 text-lg">✔</button>
+        </form>
+
+      </div>
+      {% else %}
+      <p class="text-sm text-gray-500">タスクなし</p>
+      {% endfor %}
+
     </div>
+
+    <!-- ================= 課題 ================= -->
+    <div class="bg-blue-200 p-5 rounded-3xl card">
+
+      <h2 class="font-bold text-lg mb-4">課題</h2>
+
+      <form action="/add/課題" method="POST" class="mb-4 space-y-2">
+        <input name="title" placeholder="課題名" class="w-full p-2 rounded bg-white">
+        <input type="date" name="deadline" class="w-full p-2 rounded bg-white">
+        <button class="bg-blue-500 text-white w-full p-2 rounded-full">
+          ＋追加
+        </button>
+      </form>
+
+      {% for todo in B %}
+      <div class="bg-white p-4 rounded-xl mb-3 card flex justify-between items-center">
+
+        <div>
+          <p class="font-semibold">{{ todo.title }}</p>
+          <p class="text-sm text-gray-500">
+            {{ todo.deadline if todo.deadline else "期限なし" }}
+          </p>
+        </div>
+
+        <form action="/complete/{{ todo.id }}" method="POST">
+          <button class="text-red-500 text-lg">✔</button>
+        </form>
+
+      </div>
+      {% else %}
+      <p class="text-sm text-gray-500">タスクなし</p>
+      {% endfor %}
+
+    </div>
+
+    <!-- ================= ロボコン ================= -->
+    <div class="bg-yellow-200 p-5 rounded-3xl card">
+
+      <h2 class="font-bold text-lg mb-4">ロボコン</h2>
+
+      <form action="/add/ロボコン" method="POST" class="mb-4 space-y-2">
+        <input name="title" placeholder="タスク" class="w-full p-2 rounded bg-white">
+        <input type="date" name="deadline" class="w-full p-2 rounded bg-white">
+        <button class="bg-yellow-500 text-white w-full p-2 rounded-full">
+          ＋追加
+        </button>
+      </form>
+
+      {% for todo in C %}
+      <div class="bg-white p-4 rounded-xl mb-3 card flex justify-between items-center">
+
+        <div>
+          <p class="font-semibold">{{ todo.title }}</p>
+          <p class="text-sm text-gray-500">
+            {{ todo.deadline if todo.deadline else "期限なし" }}
+          </p>
+        </div>
+
+        <form action="/complete/{{ todo.id }}" method="POST">
+          <button class="text-yellow-700 text-lg">✔</button>
+        </form>
+
+      </div>
+      {% else %}
+      <p class="text-sm text-gray-500">タスクなし</p>
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</div>
 
 </body>
 </html>
