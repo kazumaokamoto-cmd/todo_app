@@ -1,6 +1,6 @@
 import pandas as pd
 from pathlib import Path
-
+from datetime import date, datetime
 '''
 save_csv
 はadd_todoをcsvファイルに追記する関数
@@ -68,3 +68,22 @@ def complete_todo(todo_id):
     df = pd.read_csv(db_path)
     df.loc[df['id'] == todo_id, 'is_done'] = True
     df.to_csv(db_path, index=False)
+
+
+'''
+calc_days_leftは今日とtodoの期限を比較してdays_leftを返す関数
+'''
+
+def calc_days_left(todos):
+    today = date.today()
+
+    for t in todos:
+        if t.get('deadline'):
+            try:
+                d = datetime.strptime(t["deadline"], "%Y-%m-%d").date()
+                t['days_left'] = (d - today).days
+            except:
+                t['days_left'] = None
+        else:
+            t['days_left'] = None
+    return todos

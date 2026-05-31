@@ -2,6 +2,8 @@
 from flask import Flask,render_template, request, redirect
 from . import func
 
+
+
 #Flaskオブジェクトの生成
 app = Flask(__name__)
 
@@ -25,38 +27,26 @@ def index():
 #         "is_done": False
 #     }
 # ]
-    # print('todosの要素数は')
-    # print(len(todos))
-    # del_id_list = []    
-    # for i in range(len(todos) - 1):
-    #     print(f'{i}番目の判定を開始')
-    #     if todos[i]['is_done'] == True:
-    #         print(f'{i}番目はis_done')
-    #         del_id_list.append(i)
 
-    #     else:
-    #         print(f'{i}番目はis_doneでない')
-    # print(todos)
-    # print(del_id_list) 
     
-    # for i in range(len(del_id_list) - 1): 
-    #     del todos[i]
+    todos = [t for t in todos if not t.get("is_done")]
+    todos = func.calc_days_left(todos)
 
-    # print(todos)
+    A = [t for t in todos if t.get("category") == "A"]
+    B = [t for t in todos if t.get("category") == "B"]
+    C = [t for t in todos if t.get("category") == "C"]
 
-
-    todos = [i for i in todos if not i.get('is_done')]
-    return render_template('index.html', todos=todos)
     
+    return render_template("index.html", A=A, B=B, C=C)
 
-@app.route('/add', methods=['POST'])    
-def add():
+
+@app.route('/add/<category>', methods=['POST'])    
+def add(category):
     #htmlから情報をとってきた
-    new_title = request.form['new_title']
-    new_category = request.form['new_category']
-    new_deadline = request.form.get('new_deadline')
+    title = request.form['title']
+    deadline = request.form.get('deadline')
     #csvに追加
-    func.save_csv({'title':new_title, 'category':new_category, 'deadline':new_deadline, 'is_done':False})
+    func.save_csv({'title':title, 'category':category, 'deadline':deadline, 'is_done':False})
     print('csvを保存しました')
 
 
