@@ -10,8 +10,17 @@ normal_db_path = Path('app/db/todo.csv')
 
 @app.route("/")
 def index():
+    #weekly_todoを割り当てるかを判断する
+    #その日の一回目は追加、それ以降は追加しない
+    #一番最新のadded_dateとtodayを比較して違うならば追加する
+
+    assign_weekly = func.assign_weekly()    
+    print(f'assign_weeklyは{assign_weekly}です')
+    if assign_weekly:
+
+        func.weekly_add()
+    
     #weekly_todoの追加
-    func.weekly_add()
    
     todos = func.load_csv(normal_db_path)
     #todosは辞書のリスト 

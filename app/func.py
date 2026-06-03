@@ -5,7 +5,8 @@ from datetime import date, datetime, timedelta
 day_of_week = ['月', '火', '水', '木', '金', '土', '日']
 normal_db_path = Path('app/db/todo.csv')
 weekly_db_path = Path('app/db/weekly_todo.csv')
-
+today = date.today()
+tomorrow = today + timedelta(days=1)
 '''
 save_csv
 はadd_todoをcsvファイルに追記する関数
@@ -25,12 +26,14 @@ def save_csv(add_todo, normal_db_path):
             new_id = df['id'].max() + 1
         
         add_todo['id'] = new_id
+        add_todo['added_date'] = today
         df = pd.concat([df, pd.DataFrame([add_todo])])
         df.to_csv(normal_db_path, index=False)
     else:
         print('csvファイルが見つかりません。csvを作成します')
         
         add_todo['id'] = 0
+        add_todo['added_date'] = today
         df = pd.DataFrame([add_todo])
         df.to_csv(normal_db_path, index=False)
 
@@ -66,13 +69,24 @@ calc_days_leftは今日とtodoの期限を比較してdays_leftを返す関数
 '''
 
 def calc_days_left(todos):
-    today = date.today()
+    
 
     for t in todos:
         if t.get('deadline'):
             try:
                 d = datetime.strptime(t["deadline"], "%Y-%m-%d").date()
                 t['days_left'] = (d - today).days
+
+                if d == today:
+                    t["deadline_display"] = '今日'
+                    
+                elif d == tomorrow:
+                    t['deadline_display'] = '明日'
+                   
+                else:
+                    t['deadline_display'] = t['deadline']
+                    
+
             except:
                 t['days_left'] = None
         else:
@@ -86,7 +100,6 @@ deadlineは一週間後になる
 '''
 
 def weekly_add():
-    today = date.today()
     deadline = today + timedelta(7)
     #曜日の番号=today.weekday()
     weekly_todo = [#曜日のリスト
@@ -130,11 +143,27 @@ def weekly_add():
         i['deadline'] = deadline
         save_csv(i, normal_db_path)       
         print('１つ保存した')
+
+def assign_weekly():
+    assign_weekly = True
+    if normal_db_path.is_file():
+        df = pd.read_csv(normal_db_path)
+        last_row = df.iloc[-1]
+        added_date = pd.to_datetime(last_row['added_date'])
+        print(today)
+        print(added_date)
+        inttoday = today.year * 10000 + today.month * 100 + today.day
+        print(inttoday)
+        intadded_date = added_date.year * 10000 + added_date.month * 100 + added_date.day
+        print(intadded_date)
+        
+        
+        
+        if inttoday == intadded_date:
+            assign_weekly = False 
+            return assign_weekly
+    else:
+        print('csvファイルが見つかりません')
+        assign_weekly = False
+        return assign_weekly
     
-    
-
-
-
-
-
-

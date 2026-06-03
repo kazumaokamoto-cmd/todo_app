@@ -29,44 +29,94 @@ body {
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-    <!-- ================= 個人用 ================= -->
-    <div class="bg-pink-200 p-5 rounded-3xl card">
+        
+ <!-- ================= 個人用 ================= -->
+<div class="bg-pink-200 p-6 rounded-3xl shadow-md">
 
-      <h2 class="font-bold text-lg mb-4">個人用</h2>
+  <h2 class="font-bold text-lg mb-4">個人用</h2>
 
-      <form action="/add/個人用" method="POST" class="mb-4 space-y-2">
-        <input name="title" placeholder="タイトル" class="w-full p-2 rounded bg-white">
-        <input type="date" name="deadline" class="w-full p-2 rounded bg-white">
-        <button class="bg-pink-500 text-white w-full p-2 rounded-full">
-          ＋追加
+  <!-- ✅ 追加フォーム -->
+  <form action="/add/個人用" method="POST">
+
+    <!-- 入力ボックス -->
+    <div class="bg-white p-4 rounded-3xl mb-6">
+
+      <!-- タイトル -->
+      <input
+        name="title"
+        placeholder="タイトルを入力..."
+        class="w-full p-3 rounded-xl bg-gray-100 mb-3 outline-none focus:bg-white"
+        required
+      >
+
+      <!-- 日付＋ボタン -->
+      <div class="flex gap-2 items-center">
+
+        <input
+          type="date"
+          name="deadline"
+          class="flex-1 p-3 rounded-xl bg-gray-100 outline-none focus:bg-white"
+        >
+
+        <!-- ✅ 修正された＋ボタン -->
+        <button
+          type="submit"
+          class="bg-pink-500 text-white w-12 h-12 min-w-[3rem] min-h-[3rem] rounded-full flex items-center justify-center text-xl font-bold hover:brightness-110 transition flex-shrink-0"
+        >
+          ＋
         </button>
-      </form>
 
-      {% for todo in A %}
-      <div class="bg-white p-4 rounded-xl mb-3 card flex justify-between items-center">
-        <form action='/complete/{{ todo.id }}' method="POST">
-          <div>
-            <p class="font-semibold">{{ todo.title }}</p>
-            <p class="text-sm text-gray-500">
-              {{ todo.deadline if todo.deadline else "期限なし" }}
-            </p>
-          </div>
-          
-        </form>
       </div>
-      {% else %}
-      <p class="text-sm text-gray-500">タスクなし</p>
-      {% endfor %}
+
 
     </div>
 
-    <!-- ================= 課題 ================= -->
+  </form>
+
+  <!-- ✅ タスク一覧 -->
+  
+  {% for todo in A %}
+
+    <form action="/complete/{{ todo.id }}" method="POST">
+    <button type="submit" class="w-full text-left">
+
+      {% if todo.deadline_display == "今日" %}
+        {% set color = "#a1312a" %}
+      {% elif todo.deadline_display == "明日" %}
+        {% set color = "#6a5e22" %}
+      {% else %}
+        {% set color = "#3a5abf" %}
+      {% endif %}
+
+      <div
+        class="bg-white p-4 rounded-2xl mb-3 shadow-sm border-l-8 hover:scale-[0.98] transition"
+        style="border-left-color: {{ color }};"
+      >
+
+        <p class="font-semibold text-base">
+          {{ todo.title }}
+        </p>
+
+        <p class="text-sm mt-1" style="color: {{ color }};">
+          {{ todo.deadline_display }}
+        </p>
+
+      </div>
+
+    </button>
+    </form>
+
+    {% endfor %}
+
+
+</div>
+        <!-- ================= 課題 ================= -->
     <div class="bg-blue-200 p-5 rounded-3xl card">
 
       <h2 class="font-bold text-lg mb-4">課題</h2>
 
       <form action="/add/課題" method="POST" class="mb-4 space-y-2">
-        <input name="title" placeholder="課題名" class="w-full p-2 rounded bg-white">
+        <input name="title" placeholder="タイトルを入力..." class="w-full p-2 rounded bg-white">
         <input type="date" name="deadline" class="w-full p-2 rounded bg-white">
         <button class="bg-blue-500 text-white w-full p-2 rounded-full">
           ＋追加
@@ -74,33 +124,41 @@ body {
       </form>
 
       {% for todo in B %}
-      <div class="bg-white p-4 rounded-xl mb-3 card flex justify-between items-center">
 
-        <div>
-          <p class="font-semibold">{{ todo.title }}</p>
-          <p class="text-sm text-gray-500">
-            {{ todo.deadline if todo.deadline else "期限なし" }}
-          </p>
-        </div>
+      <!-- ✅ カード全体がクリック可能 -->
+      <form action="/complete/{{ todo.id }}" method="POST">
 
-        <form action="/complete/{{ todo.id }}" method="POST">
-          <button class="text-red-500 text-lg">✔</button>
-        </form>
+        <button type="submit" class="w-full text-left">
 
-      </div>
+          <div class="bg-white p-4 rounded-xl mb-3 card hover:scale-[0.98] transition">
+
+            <p class="font-semibold">
+              {{ todo.title }}
+            </p>
+
+            <p class="text-sm text-gray-500">
+              {{ todo.deadline if todo.deadline else "期限なし" }}
+            </p>
+
+          </div>
+
+        </button>
+
+      </form>
+
       {% else %}
-      <p class="text-sm text-gray-500">タスクなし</p>
+        <p class="text-sm text-gray-500">タスクなし</p>
       {% endfor %}
 
     </div>
 
-    <!-- ================= ロボコン ================= -->
+        <!-- ================= ロボコン ================= -->
     <div class="bg-yellow-200 p-5 rounded-3xl card">
 
       <h2 class="font-bold text-lg mb-4">ロボコン</h2>
 
       <form action="/add/ロボコン" method="POST" class="mb-4 space-y-2">
-        <input name="title" placeholder="タスク" class="w-full p-2 rounded bg-white">
+        <input name="title" placeholder="タイトルを入力..." class="w-full p-2 rounded bg-white">
         <input type="date" name="deadline" class="w-full p-2 rounded bg-white">
         <button class="bg-yellow-500 text-white w-full p-2 rounded-full">
           ＋追加
@@ -108,22 +166,25 @@ body {
       </form>
 
       {% for todo in C %}
-      <div class="bg-white p-4 rounded-xl mb-3 card flex justify-between items-center">
 
-        <div>
-          <p class="font-semibold">{{ todo.title }}</p>
-          <p class="text-sm text-gray-500">
-            {{ todo.deadline if todo.deadline else "期限なし" }}
-          </p>
-        </div>
+      <form action="/complete/{{ todo.id }}" method="POST">
+        <button type="submit" class="w-full text-left">
 
-        <form action="/complete/{{ todo.id }}" method="POST">
-          <button class="text-yellow-700 text-lg">✔</button>
-        </form>
+          <div class="bg-white p-4 rounded-xl mb-3 card hover:scale-[0.98] transition">
 
-      </div>
+            <p class="font-semibold">{{ todo.title }}</p>
+
+            <p class="text-sm text-gray-500">
+              {{ todo.deadline if todo.deadline else "期限なし" }}
+            </p>
+
+          </div>
+
+        </button>
+      </form>
+
       {% else %}
-      <p class="text-sm text-gray-500">タスクなし</p>
+        <p class="text-sm text-gray-500">タスクなし</p>
       {% endfor %}
 
     </div>
