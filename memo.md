@@ -39,3 +39,12 @@ weeklytodoも追加されるが再読み込みをしたときに増殖してし�
 
 date型で比較したらうまくいかんかった
 intにしたらできた
+
+ver3.0
+UI改善
+データベースをsqliteに移行
+weekly_todoをGUIで追加できるようにした
+weekly_todoの即時反映
+todoのarchived機能
+antigravityすごい
+これからでrenderでデプロイするぞ
