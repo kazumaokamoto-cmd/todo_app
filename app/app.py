@@ -1,15 +1,17 @@
 # FlaskとRender_template（HTMLを表示させるための関数）をインポート
 from flask import Flask, render_template, request, redirect
 from . import func
+from . import discord_notification
 
 # Flaskオブジェクトの生成
 app = Flask(__name__)
 
-# SQLiteデータベースの初期化
+# SQLiteデータベースの初期化http://127.0.0.1:5000
 func.init_db()
 
 @app.route("/")
 def index():
+    discord_notification.notify_deadline()
     # weekly_todoを割り当てるかを判断する
     # その日の一回目は追加、それ以降は追加しない
     assign_weekly = func.assign_weekly()

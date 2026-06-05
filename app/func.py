@@ -86,6 +86,7 @@ def init_db():
 
     conn.commit()
     conn.close()
+    add_notified_column()
     print('SQLiteデータベースを初期化しました')
 
 
@@ -268,5 +269,18 @@ def delete_weekly_template(day_of_week, title, category):
         'DELETE FROM weekly_templates WHERE day_of_week = ? AND title = ? AND category = ?',
         (int(day_of_week), title.strip(), category.strip())
     )
+    conn.commit()
+    conn.close()
+
+def add_notified_column():
+    conn = get_conn()
+    c = conn.cursor()
+
+    try:
+        c.execute("ALTER TABLE todos ADD COLUMN notified INTEGER DEFAULT 0")
+        print('notifiedカラムを追加しました')
+    except sqlite3.OperationalError:
+        pass
+
     conn.commit()
     conn.close()
