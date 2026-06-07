@@ -101,7 +101,7 @@ def weekly_delete_route():
     func.delete_weekly_template(day_of_week, title, category)
     return redirect('/weekly')
 
-@app.route('notify')
+@app.route('/notify')
 def discord_notification():
 
     discord_notification.notify_deadline()
