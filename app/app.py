@@ -11,7 +11,6 @@ func.init_db()
 
 @app.route("/")
 def index():
-    discord_notification.notify_deadline()
     # weekly_todoを割り当てるかを判断する
     # その日の一回目は追加、それ以降は追加しない
     assign_weekly = func.assign_weekly()
@@ -101,3 +100,8 @@ def weekly_delete_route():
     category = request.form['category']
     func.delete_weekly_template(day_of_week, title, category)
     return redirect('/weekly')
+
+@app.route('notify')
+def discord_notification():
+
+    discord_notification.notify_deadline()

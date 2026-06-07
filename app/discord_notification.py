@@ -2,8 +2,10 @@ import requests
 from datetime import datetime, timedelta, date
 from . func import get_conn
 from pathlib import Path
+import os
 
-url = Path('app/const.txt').read_text()
+
+url = os.environ.get('DISCORD_WEBHOOK_URL')
 
 def send_discord(message):
     data = {
